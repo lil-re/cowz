@@ -2,8 +2,8 @@
   "_format": "hh-sol-cache-2",
   "files": {
     "D:\\workspace\\react\\cowz\\contracts\\BabyCowz.sol": {
-      "lastModificationDate": 1676220832686,
-      "contentHash": "f0a495d164003e1e7080ce1ec98639e5",
+      "lastModificationDate": 1676229104930,
+      "contentHash": "8b1b036efc5d6ebc13de012a6ff3f5f2",
       "sourceName": "contracts/BabyCowz.sol",
       "solcConfig": {
         "version": "0.8.17",

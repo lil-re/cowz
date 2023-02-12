@@ -5,7 +5,7 @@ function UnstakeButton ({ data, unstake }) {
                 You are already staking your Cow
             </p>
             <p className="card-text cost">
-                You have earned x BabyCowz !
+                You have earned {data.earned} BabyCowz !
             </p>
             <p className="card-text">
                 <button className="button button-primary" onClick={unstake}>

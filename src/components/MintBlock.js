@@ -3,7 +3,7 @@ import MintButton from "./MintButton";
 import StakeButton from "./StakeButton";
 import UnstakeButton from "./UnstakeButton";
 
-function MintBlock ({ data, account, connect, mint }) {
+function MintBlock ({ data, account, connect, mint, stake, unstake }) {
   return (
     <article className="card text-center">
       <img src="https://placedog.net/400/200/" alt="placeholder" />
@@ -13,10 +13,10 @@ function MintBlock ({ data, account, connect, mint }) {
       {
         account
           ? data.balance === 0
-            ? data.staking
-              ? <UnstakeButton data={data} mint={mint} />
-              : <MintButton data={data} mint={mint} />
-            : <StakeButton data={data} mint={mint} />
+            ? data.cowId === 0
+              ? <MintButton data={data} mint={mint} />
+              : <UnstakeButton data={data} stake={stake} />
+            : <StakeButton data={data} unstake={unstake} />
           : <ConnectionButton connect={connect} />
       }
     </article>

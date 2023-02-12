@@ -47,7 +47,6 @@ contract BabyCowz is ERC721Enumerable, Ownable {
 
   function _reward(address _to, uint256 _mintAmount) internal {
     uint256 supply = totalSupply();
-    require(!paused, 'Minting not enabled');
     require(_mintAmount > 0, 'Invalid mint amount');
     require(_mintAmount <= maxMintAmount, 'Exceed max amount');
     require(balanceOf(msg.sender) + 1 <= maxPerWallet, 'Exceed max wallet');

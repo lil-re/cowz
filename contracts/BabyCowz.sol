@@ -24,12 +24,12 @@ contract BabyCowz is ERC721Enumerable, Ownable {
   uint256 public maxSupply = 2000;
   uint256 public maxMintAmount = 1;
   uint256 public maxPerWallet = 1;
-  bool public paused = false;
+  bool public paused = true;
   mapping(address => bool) public whitelisted;
 
   IERC721 public parentContract;
   uint256 public totalStaked;
-  uint256 public notFoundIndex = 0;
+  uint24 public notFoundIndex = 0;
   mapping(uint256 => Stake) public vault;
 
   event NFTStaked(address owner, uint256 tokenId, uint256 value);
@@ -43,6 +43,25 @@ contract BabyCowz is ERC721Enumerable, Ownable {
   // internal
   function _baseURI() internal view virtual override returns (string memory) {
     return baseURI;
+  }
+
+  function _reward(address _to, uint256 _mintAmount) internal {
+    uint256 supply = totalSupply();
+    require(!paused, 'Minting not enabled');
+    require(_mintAmount > 0, 'Invalid mint amount');
+    require(_mintAmount <= maxMintAmount, 'Exceed max amount');
+    require(balanceOf(msg.sender) + 1 <= maxPerWallet, 'Exceed max wallet');
+    require(supply + _mintAmount <= maxSupply, 'Sold out');
+
+    if (msg.sender != owner()) {
+        if(whitelisted[msg.sender] != true) {
+          require(msg.value >= cost * _mintAmount);
+        }
+    }
+
+    for (uint256 i = 1; i <= _mintAmount; i++) {
+      _safeMint(_to, supply + i);
+    }
   }
 
   // public
@@ -190,7 +209,7 @@ contract BabyCowz is ERC721Enumerable, Ownable {
 
     if (earned > 0) {
       earned = earned / 10;
-      mint(_account, earned);
+      _reward(_account, earned);
     }
     if (_status) {
       _unstake(_account, _tokenId);
@@ -198,12 +217,12 @@ contract BabyCowz is ERC721Enumerable, Ownable {
     emit Claimed(_account, earned);
   }
 
-  function ownersCow(address _account) external view returns (uint256) {
-    for (uint248 i = 1; i <= totalStaked; i++) {
+  function ownersCow(address _account) external view returns (uint24) {
+    for (uint248 i = 1; i <= 200; i++) {
       Stake memory staked = vault[i];
 
       if (staked.owner == _account) {
-        return i;
+        return staked.tokenId;
       }
     }
     return notFoundIndex;

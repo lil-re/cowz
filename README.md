@@ -17,6 +17,6 @@ npx hardhat run scripts/deploy.js
 ```shell
 npx hardhat clean 
 npx hardhat compile
-npx hardhat run ./scripts/deploy.js --network goerli
+npx hardhat run ./scripts/deployCowz.js --network goerli
 npx hardhat verify --network goerli <CONTRACT_ADDRESS>
 ```

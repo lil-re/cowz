@@ -11,7 +11,7 @@ dotenv.config();
 
 async function main() {
   const Cowz = await hre.ethers.getContractFactory("Cowz");
-  const cowz = await Cowz.deploy("Cowz", "COWZ", process.env.JSON_CID);
+  const cowz = await Cowz.deploy();
 
   await cowz.deployed();
 

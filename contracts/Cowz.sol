@@ -16,16 +16,12 @@ contract Cowz is ERC721Enumerable, Ownable {
   uint256 public cost = 0 ether;
   uint256 public maxSupply = 200;
   uint256 public maxMintAmount = 1;
+  uint256 public maxPerWallet = 1;
   bool public paused = false;
   mapping(address => bool) public whitelisted;
 
-  constructor(
-    string memory _name,
-    string memory _symbol,
-    string memory _initBaseURI
-  ) ERC721(_name, _symbol) {
-    setBaseURI(_initBaseURI);
-    // mint(msg.sender, 10);
+  constructor() ERC721("Cowz", "COWZ") {
+    mint(msg.sender, 1);
   }
 
   // internal
@@ -36,10 +32,11 @@ contract Cowz is ERC721Enumerable, Ownable {
   // public
   function mint(address _to, uint256 _mintAmount) public payable {
     uint256 supply = totalSupply();
-    require(!paused);
-    require(_mintAmount > 0);
-    require(_mintAmount <= maxMintAmount);
-    require(supply + _mintAmount <= maxSupply);
+    require(!paused, 'Minting not enabled');
+    require(_mintAmount > 0, 'Invalid mint amount');
+    require(_mintAmount <= maxMintAmount, 'Exceed max amount');
+    require(balanceOf(msg.sender) + 1 <= maxPerWallet, 'Exceed max wallet');
+    require(supply + _mintAmount <= maxSupply, 'Sold out');
 
     if (msg.sender != owner()) {
         if(whitelisted[msg.sender] != true) {
@@ -88,8 +85,12 @@ contract Cowz is ERC721Enumerable, Ownable {
     cost = _newCost;
   }
 
-  function setmaxMintAmount(uint256 _newmaxMintAmount) public onlyOwner {
-    maxMintAmount = _newmaxMintAmount;
+  function setMaxMintAmount(uint256 _newMaxMintAmount) public onlyOwner {
+    maxMintAmount = _newMaxMintAmount;
+  }
+
+  function setMaxPerWallet(uint256 _newMaxPerWallet) public onlyOwner {
+    maxPerWallet = _newMaxPerWallet;
   }
 
   function setBaseURI(string memory _newBaseURI) public onlyOwner {

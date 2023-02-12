@@ -6,7 +6,7 @@ import IntroBlock from "./components/IntroBlock";
 
 
 function App() {
-  const cowzAddress = "0x1c94562F6F2DF5d2d5a68dFB60c6008A6226a210"
+  const cowzAddress = "0x42Ad853222D025f28bEcb32CdF5ec91427543504"
   const [error, setError] = useState('');
   const [data, setData] = useState({})
   const [account, setAccount] = useState(null)

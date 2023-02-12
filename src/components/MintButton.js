@@ -1,5 +1,4 @@
 function MintButton ({ data, mint }) {
-    console.log(data);
     return (
         <div>
             <p className="card-text count">

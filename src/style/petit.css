@@ -102,7 +102,6 @@ input[type="button"]:disabled:focus {
     display: inline-block;
     background: #FFF;
     border: 6px solid #E3F2FD;
-    border-radius: 20px;
 }
 .card img {
     width: 100%;
@@ -110,8 +109,6 @@ input[type="button"]:disabled:focus {
     padding: 0;
     background-position: center;
     overflow: hidden;
-    border-top-left-radius: 16px;
-    border-top-right-radius: 16px;
 }
 .card .card-title {
     margin: 0;

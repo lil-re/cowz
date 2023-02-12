@@ -1,5 +1,7 @@
 import ConnectionButton from "./ConnectionButton";
 import MintButton from "./MintButton";
+import StakeButton from "./StakeButton";
+import UnstakeButton from "./UnstakeButton";
 
 function MintBlock ({ data, account, connect, mint }) {
   return (
@@ -11,8 +13,10 @@ function MintBlock ({ data, account, connect, mint }) {
       {
         account
           ? data.balance === 0
-            ? <MintButton data={data} mint={mint} />
-            : <p className="card-text">You already have a Cow</p>
+            ? data.staking
+              ? <UnstakeButton data={data} mint={mint} />
+              : <MintButton data={data} mint={mint} />
+            : <StakeButton data={data} mint={mint} />
           : <ConnectionButton connect={connect} />
       }
     </article>

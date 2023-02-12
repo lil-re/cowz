@@ -7,6 +7,7 @@ import IntroBlock from "./components/IntroBlock";
 
 function App() {
   const cowzAddress = "0x42Ad853222D025f28bEcb32CdF5ec91427543504"
+  const babyCowzAddress = "0x0c61c4E9DAc1649E5569Aa9C4E0476aC351871ED"
   const [error, setError] = useState('');
   const [data, setData] = useState({})
   const [account, setAccount] = useState(null)
@@ -18,12 +19,15 @@ function App() {
   async function fetchData() {
     if(typeof window.ethereum !== 'undefined' && account) {
       const provider = new ethers.providers.Web3Provider(window.ethereum)
-      const contract = new ethers.Contract(cowzAddress, Cowz.abi, provider)
+      const cowzContract = new ethers.Contract(cowzAddress, Cowz.abi, provider)
+      const babyCowzContract = new ethers.Contract(babyCowzAddress, Cowz.abi, provider)
 
       try {
-        const cost = await contract.cost()
-        const totalSupply = await contract.totalSupply()
-        const balance = await contract.balanceOf(account)
+        const cost = await cowzContract.cost()
+        const totalSupply = await cowzContract.totalSupply()
+        const balance = await cowzContract.balanceOf(account)
+        const vault = await babyCowzContract
+        console.log(vault);
         const values = {
           cost: String(cost),
           totalSupply: String(totalSupply),

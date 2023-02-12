@@ -29,6 +29,7 @@ contract BabyCowz is ERC721Enumerable, Ownable {
 
   IERC721 public parentContract;
   uint256 public totalStaked;
+  uint256 public notFoundIndex = 0;
   mapping(uint256 => Stake) public vault;
 
   event NFTStaked(address owner, uint256 tokenId, uint256 value);
@@ -180,7 +181,7 @@ contract BabyCowz is ERC721Enumerable, Ownable {
 
     Stake memory staked = vault[_tokenId];
     require(staked.owner == _account, "not an owner");
-    earned += 100000 ether * (block.timestamp - staked.timestamp) / 30 days;
+    earned += 100 ether * (block.timestamp - staked.timestamp) / 30 days;
     vault[_tokenId] = Stake({
       owner: _account,
       tokenId: uint24(_tokenId),
@@ -197,10 +198,21 @@ contract BabyCowz is ERC721Enumerable, Ownable {
     emit Claimed(_account, earned);
   }
 
+  function ownersCow(address _account) external view returns (uint256) {
+    for (uint248 i = 1; i <= totalStaked; i++) {
+      Stake memory staked = vault[i];
+
+      if (staked.owner == _account) {
+        return i;
+      }
+    }
+    return notFoundIndex;
+  }
+
   function earningInfo(uint256 _tokenId) external view returns (uint256 info) {
     uint256 earned = 0;
     Stake memory staked = vault[_tokenId];
-    earned += 100000 ether * (block.timestamp - staked.timestamp) / 30 days;
+    earned += 100 ether * (block.timestamp - staked.timestamp) / 30 days;
     // earned, earnRatePerSecond
     return earned;
   }

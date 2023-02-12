@@ -1,61 +1,65 @@
 import { useState, useEffect } from "react";
 import { ethers } from "ethers";
-import Cowz from "./artifacts/contracts/Cowz.sol/Cowz.json"
+import Cowz from "./abis/Cowz.json"
 import MintBlock from "./components/MintBlock";
 import IntroBlock from "./components/IntroBlock";
 
-const cowzAddress = "0x1c94562F6F2DF5d2d5a68dFB60c6008A6226a210"
 
 function App() {
+  const cowzAddress = "0x1c94562F6F2DF5d2d5a68dFB60c6008A6226a210"
   const [error, setError] = useState('');
   const [data, setData] = useState({})
-  const [accounts, setAccounts] = useState([])
+  const [account, setAccount] = useState(null)
 
   useEffect(() => {
     fetchData();
-  }, [])
+  }, [account]);
 
   async function fetchData() {
-    if(typeof window.ethereum !== 'undefined') {
-      const provider = new ethers.providers.Web3Provider(window.ethereum);
-      const contract = new ethers.Contract(cowzAddress, Cowz.abi, provider);
+    if(typeof window.ethereum !== 'undefined' && account) {
+      const provider = new ethers.providers.Web3Provider(window.ethereum)
+      const contract = new ethers.Contract(cowzAddress, Cowz.abi, provider)
+
       try {
-        const cost = await contract.cost();
-        const totalSupply = await contract.totalSupply();
-        const values = {"cost": String(cost), "totalSupply": String(totalSupply)}
+        const cost = await contract.cost()
+        const totalSupply = await contract.totalSupply()
+        const balance = await contract.balanceOf(account)
+        const values = {
+          cost: String(cost),
+          totalSupply: String(totalSupply),
+          balance: Number(balance)
+        }
         setData(values);
-      }
-      catch(err) {
+      } catch(err) {
         setError(err.message);
       }
     }
   }
 
   async function mint() {
-    if(typeof window.ethereum !== 'undefined' && accounts[0]) {
+    if (typeof window.ethereum !== 'undefined' && account) {
       const provider = new ethers.providers.Web3Provider(window.ethereum);
       const signer = provider.getSigner();
       const contract = new ethers.Contract(cowzAddress, Cowz.abi, signer);
 
       try {
         const overrides = {
-          from: accounts[0],
+          from: account,
           value: data.cost
         }
-        const transaction = await contract.mint(accounts[0], 1, overrides);
+        const transaction = await contract.mint(account, 1, overrides);
         await transaction.wait();
         fetchData();
-      }
-      catch(err) {
+      } catch (err) {
         setError(err.message);
       }
     }
   }
 
   async function connect () {
-    if  (typeof window.ethereum !== 'undefined') {
-        const availableAccounts = await window.ethereum.request({method: 'eth_requestAccounts'});
-        setAccounts(availableAccounts)
+    if (typeof window.ethereum !== 'undefined') {
+      const accounts = await window.ethereum.request({method: 'eth_requestAccounts'});
+      setAccount(accounts[0])
     }
   }
 
@@ -66,10 +70,10 @@ function App() {
           <div className="column-6">
             <div className="row justify-center">
               <div className="column-12">
-                <MintBlock data={data} accounts={accounts} connect={connect} mint={mint} />
+                <MintBlock data={data} account={account} connect={connect} mint={mint} />
               </div>
               <div className="column-12">
-                <IntroBlock accounts={accounts} connect={connect} />
+                <IntroBlock account={account} connect={connect} />
               </div>
             </div>
           </div>

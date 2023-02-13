@@ -8,7 +8,7 @@ import IntroBlock from "./components/IntroBlock";
 
 function App() {
   const cowzAddress = "0x42Ad853222D025f28bEcb32CdF5ec91427543504"
-  const babyCowzAddress = "0xe437016c7Ad3411Cc2C9dd2343EA60d5da74b172"
+  const babyCowzAddress = "0x3d6d4460BD769235d8F80ca64B19348ee35b1acb"
   const [error, setError] = useState('');
   const [data, setData] = useState({})
   const [account, setAccount] = useState(null)

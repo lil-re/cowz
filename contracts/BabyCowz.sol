@@ -49,13 +49,13 @@ contract BabyCowz is ERC721Enumerable, Ownable {
     uint256 supply = totalSupply();
     require(_mintAmount > 0, 'Invalid mint amount');
     require(_mintAmount <= maxMintAmount, 'Exceed max amount');
-    require(balanceOf(msg.sender) + 1 <= maxPerWallet, 'Exceed max wallet');
+    require(balanceOf(msg.sender) + 1 <= maxPerWallet, 'Exceed max per wallet');
     require(supply + _mintAmount <= maxSupply, 'Sold out');
 
     if (msg.sender != owner()) {
-        if(whitelisted[msg.sender] != true) {
-          require(msg.value >= cost * _mintAmount);
-        }
+      if (whitelisted[msg.sender] != true) {
+        require(msg.value >= cost * _mintAmount);
+      }
     }
 
     for (uint256 i = 1; i <= _mintAmount; i++) {
@@ -69,7 +69,7 @@ contract BabyCowz is ERC721Enumerable, Ownable {
     require(!paused, 'Minting not enabled');
     require(_mintAmount > 0, 'Invalid mint amount');
     require(_mintAmount <= maxMintAmount, 'Exceed max amount');
-    require(balanceOf(msg.sender) + 1 <= maxPerWallet, 'Exceed max wallet');
+    require(balanceOf(msg.sender) + 1 <= maxPerWallet, 'Exceed max per wallet');
     require(supply + _mintAmount <= maxSupply, 'Sold out');
 
     if (msg.sender != owner()) {
@@ -83,26 +83,17 @@ contract BabyCowz is ERC721Enumerable, Ownable {
     }
   }
 
-  function walletOfOwner(address _owner)
-    public
-    view
-    returns (uint256[] memory)
-  {
+  function walletOfOwner(address _owner) public view returns (uint256[] memory) {
     uint256 ownerTokenCount = balanceOf(_owner);
     uint256[] memory tokenIds = new uint256[](ownerTokenCount);
+    
     for (uint256 i; i < ownerTokenCount; i++) {
       tokenIds[i] = tokenOfOwnerByIndex(_owner, i);
     }
     return tokenIds;
   }
 
-  function tokenURI(uint256 tokenId)
-    public
-    view
-    virtual
-    override
-    returns (string memory)
-  {
+  function tokenURI(uint256 tokenId) public view virtual override returns (string memory) {
     require(
       _exists(tokenId),
       "ERC721Metadata: URI query for nonexistent token"
@@ -195,11 +186,10 @@ contract BabyCowz is ERC721Enumerable, Ownable {
   }
 
   function _claim(address _account, uint256 _tokenId, bool _status) internal {
-    uint256 earned = 0;
-
     Stake memory staked = vault[_tokenId];
     require(staked.owner == _account, "not an owner");
-    earned += 100 ether * (block.timestamp - staked.timestamp) / 30 days;
+    
+    uint256 earned = _calculateRewards(staked);
     vault[_tokenId] = Stake({
       owner: _account,
       tokenId: uint24(_tokenId),
@@ -228,10 +218,11 @@ contract BabyCowz is ERC721Enumerable, Ownable {
   }
 
   function earningInfo(uint256 _tokenId) external view returns (uint256 info) {
-    uint256 earned = 0;
     Stake memory staked = vault[_tokenId];
-    earned += 100 ether * (block.timestamp - staked.timestamp) / 30 days;
-    // earned, earnRatePerSecond
-    return earned;
+    return _calculateRewards(staked);
+  }
+
+  function _calculateRewards(Stake memory _stake) public view returns (uint256){
+    return (block.timestamp - _stake.timestamp) / (86400 * 30);
   }
 }

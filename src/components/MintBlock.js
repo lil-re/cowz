@@ -15,8 +15,8 @@ function MintBlock ({ data, account, connect, mint, stake, unstake }) {
           ? data.balance === 0
             ? data.cowId === 0
               ? <MintButton data={data} mint={mint} />
-              : <UnstakeButton data={data} stake={stake} />
-            : <StakeButton data={data} unstake={unstake} />
+              : <UnstakeButton data={data} unstake={unstake} />
+            : <StakeButton data={data} stake={stake} />
           : <ConnectionButton connect={connect} />
       }
     </article>

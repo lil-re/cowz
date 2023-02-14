@@ -18,7 +18,6 @@ function App() {
   }, [account]);
 
   async function fetchData() {
-    console.log(typeof window.ethereum !== 'undefined' && account)
     if(typeof window.ethereum !== 'undefined' && account) {
       const provider = new ethers.providers.Web3Provider(window.ethereum)
       const cowzContract = new ethers.Contract(cowzAddress, Cowz.abi, provider)
@@ -28,18 +27,22 @@ function App() {
         const cost = await cowzContract.cost()
         const totalSupply = await cowzContract.totalSupply()
         const balance = await cowzContract.balanceOf(account)
-        const cowId = await babyCowzContract.ownersCow(account)
-        const earned = await babyCowzContract.earningInfo(cowId)
-        
+        const isApprovedForAll = await cowzContract.isApprovedForAll(account, babyCowzAddress)
+        const wallet = await cowzContract.walletOfOwner(account)
+        const stakedCowId = await babyCowzContract.ownersCow(account)
+        const earned = await babyCowzContract.earningInfo(stakedCowId)
+
         const values = {
           cost: String(cost),
           totalSupply: String(totalSupply),
           balance: Number(balance),
-          cowId: Number(cowId),
+          isApprovedForAll,
+          cowId: Number(wallet[0]),
+          stakedCowId: Number(stakedCowId),
           earned: Number(earned),
         }
         setData(values);
-      } catch(err) {
+      } catch (err) {
         setError(err.message);
       }
     }
@@ -65,6 +68,54 @@ function App() {
     }
   }
 
+  async function claim() {
+    if (typeof window.ethereum !== 'undefined' && account && data.stakedCowId) {
+      const provider = new ethers.providers.Web3Provider(window.ethereum);
+      const signer = provider.getSigner();
+      const contract = new ethers.Contract(babyCowzAddress, BabyCowz.abi, signer);
+      
+      try {
+        await contract.claim(data.stakedCowId);
+        fetchData();
+      } catch (err) {
+        setError(err.message);
+      }
+    }
+  }
+
+  async function unstake() {
+    if (typeof window.ethereum !== 'undefined' && account && data.stakedCowId) {
+      const provider = new ethers.providers.Web3Provider(window.ethereum);
+      const signer = provider.getSigner();
+      const contract = new ethers.Contract(babyCowzAddress, BabyCowz.abi, signer);
+      
+      try {
+        await contract.unstake(data.stakedCowId);
+        fetchData();
+      } catch (err) {
+        setError(err.message);
+      }
+    }
+  }
+
+  async function stake() {
+    if (typeof window.ethereum !== 'undefined' && account && data.cowId) {
+      const provider = new ethers.providers.Web3Provider(window.ethereum);
+      const signer = provider.getSigner();
+      const contract = new ethers.Contract(babyCowzAddress, BabyCowz.abi, signer);
+      
+      try {
+        if (!data.isApprovedForAll) {
+          await contract.setApprovalForAll(babyCowzAddress, true);
+        }
+        await contract.stake(data.cowId);
+        fetchData();
+      } catch (err) {
+        setError(err.message);
+      }
+    }
+  }
+
   async function connect () {
     if (typeof window.ethereum !== 'undefined') {
       const accounts = await window.ethereum.request({method: 'eth_requestAccounts'});
@@ -79,7 +130,7 @@ function App() {
           <div className="column-6">
             <div className="row justify-center">
               <div className="column-12">
-                <MintBlock data={data} account={account} connect={connect} mint={mint} />
+                <MintBlock data={data} account={account} connect={connect} mint={mint} stake={stake} unstake={unstake} />
               </div>
               <div className="column-12">
                 <IntroBlock account={account} connect={connect} />

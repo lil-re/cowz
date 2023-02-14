@@ -41,6 +41,7 @@ function App() {
           stakedCowId: Number(stakedCowId),
           earned: Number(earned),
         }
+        console.log(values)
         setData(values);
       } catch (err) {
         setError(err.message);
@@ -102,13 +103,14 @@ function App() {
     if (typeof window.ethereum !== 'undefined' && account && data.cowId) {
       const provider = new ethers.providers.Web3Provider(window.ethereum);
       const signer = provider.getSigner();
-      const contract = new ethers.Contract(babyCowzAddress, BabyCowz.abi, signer);
+      const cowzContract = new ethers.Contract(cowzAddress, Cowz.abi, signer);
+      const babyCowzContract = new ethers.Contract(babyCowzAddress, BabyCowz.abi, signer);
       
       try {
         if (!data.isApprovedForAll) {
-          await contract.setApprovalForAll(babyCowzAddress, true);
+          await cowzContract.setApprovalForAll(babyCowzAddress, true);
         }
-        await contract.stake(data.cowId);
+        await babyCowzContract.stake(data.cowId);
         fetchData();
       } catch (err) {
         setError(err.message);

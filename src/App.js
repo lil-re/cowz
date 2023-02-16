@@ -9,6 +9,7 @@ import IntroBlock from "./components/IntroBlock";
 function App() {
   const cowzAddress = "0x42Ad853222D025f28bEcb32CdF5ec91427543504"
   const babyCowzAddress = "0x3d6d4460BD769235d8F80ca64B19348ee35b1acb"
+  const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [data, setData] = useState({})
   const [account, setAccount] = useState(null)
@@ -62,37 +63,7 @@ function App() {
         }
         const transaction = await contract.mint(account, 1, overrides);
         await transaction.wait();
-        fetchData();
-      } catch (err) {
-        setError(err.message);
-      }
-    }
-  }
-
-  async function claim() {
-    if (typeof window.ethereum !== 'undefined' && account && data.stakedCowId) {
-      const provider = new ethers.providers.Web3Provider(window.ethereum);
-      const signer = provider.getSigner();
-      const contract = new ethers.Contract(babyCowzAddress, BabyCowz.abi, signer);
-      
-      try {
-        await contract.claim(data.stakedCowId);
-        fetchData();
-      } catch (err) {
-        setError(err.message);
-      }
-    }
-  }
-
-  async function unstake() {
-    if (typeof window.ethereum !== 'undefined' && account && data.stakedCowId) {
-      const provider = new ethers.providers.Web3Provider(window.ethereum);
-      const signer = provider.getSigner();
-      const contract = new ethers.Contract(babyCowzAddress, BabyCowz.abi, signer);
-      
-      try {
-        await contract.unstake(data.stakedCowId);
-        fetchData();
+        await fetchData();
       } catch (err) {
         setError(err.message);
       }
@@ -105,16 +76,57 @@ function App() {
       const signer = provider.getSigner();
       const cowzContract = new ethers.Contract(cowzAddress, Cowz.abi, signer);
       const babyCowzContract = new ethers.Contract(babyCowzAddress, BabyCowz.abi, signer);
+      setLoading(true)
       
       try {
         if (!data.isApprovedForAll) {
-          await cowzContract.setApprovalForAll(babyCowzAddress, true);
+          const approvalTransaction = await cowzContract.setApprovalForAll(babyCowzAddress, true);
+          await approvalTransaction.wait();
         }
-        await babyCowzContract.stake(data.cowId);
-        fetchData();
+
+        const stakingTransaction = await babyCowzContract.stake(data.cowId);
+        await stakingTransaction.wait();
+        await fetchData();
       } catch (err) {
         setError(err.message);
       }
+      setLoading(false)
+    }
+  }
+
+  async function unstake() {
+    if (typeof window.ethereum !== 'undefined' && account && data.stakedCowId) {
+      const provider = new ethers.providers.Web3Provider(window.ethereum);
+      const signer = provider.getSigner();
+      const contract = new ethers.Contract(babyCowzAddress, BabyCowz.abi, signer);
+      setLoading(true)
+      
+      try {
+        const transaction = await contract.unstake(data.stakedCowId);
+        await transaction.wait();
+        await fetchData();
+      } catch (err) {
+        setError(err.message);
+      }
+      setLoading(false)
+    }
+  }
+
+  async function claim() {
+    if (typeof window.ethereum !== 'undefined' && account && data.stakedCowId) {
+      const provider = new ethers.providers.Web3Provider(window.ethereum);
+      const signer = provider.getSigner();
+      const contract = new ethers.Contract(babyCowzAddress, BabyCowz.abi, signer);
+      setLoading(true)
+      
+      try {
+        const transaction = await contract.claim(data.stakedCowId);
+        await transaction.wait();
+        await fetchData();
+      } catch (err) {
+        setError(err.message);
+      }
+      setLoading(false)
     }
   }
 
@@ -132,7 +144,7 @@ function App() {
           <div className="column-6">
             <div className="row justify-center">
               <div className="column-12">
-                <MintBlock data={data} account={account} connect={connect} mint={mint} stake={stake} unstake={unstake} />
+                <MintBlock data={data} account={account} connect={connect} mint={mint} stake={stake} unstake={unstake} loading={loading} />
               </div>
               <div className="column-12">
                 <IntroBlock account={account} connect={connect} />

@@ -4,6 +4,8 @@ import Cowz from "./abis/Cowz.json"
 import BabyCowz from "./abis/BabyCowz.json"
 import MintBlock from "./components/blocks/MintBlock";
 import IntroBlock from "./components/blocks/IntroBlock";
+import StakeBlock from "./components/blocks/StakeBlock";
+import SocialBlock from "./components/blocks/SocialBlock";
 
 
 function App() {
@@ -151,6 +153,12 @@ function App() {
               </div>
               <div className="column-12">
                 <IntroBlock account={account} connect={connect} />
+              </div>
+              <div className="column-12">
+                <StakeBlock data={data} account={account} connect={connect} mint={mint} stake={stake} unstake={unstake} loading={loading} />
+              </div>
+              <div className="column-12">
+                <SocialBlock />
               </div>
             </div>
           </div>

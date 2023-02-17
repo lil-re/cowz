@@ -5,7 +5,7 @@ function MintBlock ({ data, account, connect, mint, stake, unstake, loading }) {
     <article className="card text-center">
       <img src="https://placedog.net/400/200/" alt="placeholder" />
       <h1 className="card-title">
-        Mint Cowz !
+        Become a web3 farmer !
       </h1>
       <Buttons data={data} account={account} connect={connect} mint={mint} stake={stake} unstake={unstake} loading={loading} />
     </article>

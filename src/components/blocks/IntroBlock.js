@@ -14,13 +14,13 @@ function IntroBlock ({ account, connect }) {
         What Cowz have to offer ? 
       </h1>
       <p className="card-text">
-        By minting a Cow, you will get access to our private Discord community of makers and NFT enthusiasts, where everybody can help each other and share their projects.
+        Cowz owners are able to <strong>stake their NFTs</strong> to get BabyCowz. BabyCowz are a collection of unique NFTs that can ony be minted by Cowz farmerz.
       </p>
       <p className="card-text">
-        Cowz owners are also able to stake their NFTs to get Baby Cowz. Baby Cowz are a collection of unique NFTs that can ony be minted by Cowz stakers.
+        Long term hodlers will also get <strong>huge discounts</strong> on our next projects.
       </p>
       <p className="card-text">
-        Finally, long term hodlers will get huge discounts on our next projects.
+        Finally, you can join our Discord community of makers and NFT enthusiasts, where everybody can help each other and share their projects.
       </p>
       { account ? <span></span> : <ConnectionButton connect={connect} /> }
     </article>

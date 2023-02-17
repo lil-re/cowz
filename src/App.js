@@ -2,8 +2,8 @@ import { useState, useEffect } from "react";
 import { ethers } from "ethers";
 import Cowz from "./abis/Cowz.json"
 import BabyCowz from "./abis/BabyCowz.json"
-import MintBlock from "./components/MintBlock";
-import IntroBlock from "./components/IntroBlock";
+import MintBlock from "./components/blocks/MintBlock";
+import IntroBlock from "./components/blocks/IntroBlock";
 
 
 function App() {
@@ -23,6 +23,7 @@ function App() {
       const provider = new ethers.providers.Web3Provider(window.ethereum)
       const cowzContract = new ethers.Contract(cowzAddress, Cowz.abi, provider)
       const babyCowzContract = new ethers.Contract(babyCowzAddress, BabyCowz.abi, provider)
+      setLoading(true)
 
       try {
         const cost = await cowzContract.cost()
@@ -32,7 +33,7 @@ function App() {
         const wallet = await cowzContract.walletOfOwner(account)
         const stakedCowId = await babyCowzContract.ownersCow(account)
         const earned = await babyCowzContract.earningInfo(stakedCowId)
-
+        
         const values = {
           cost: String(cost),
           totalSupply: String(totalSupply),
@@ -42,11 +43,11 @@ function App() {
           stakedCowId: Number(stakedCowId),
           earned: Number(earned),
         }
-        console.log(values)
         setData(values);
       } catch (err) {
         setError(err.message);
       }
+      setLoading(false)
     }
   }
 
@@ -55,7 +56,8 @@ function App() {
       const provider = new ethers.providers.Web3Provider(window.ethereum);
       const signer = provider.getSigner();
       const contract = new ethers.Contract(cowzAddress, Cowz.abi, signer);
-
+      setLoading(true)
+      
       try {
         const overrides = {
           from: account,
@@ -67,6 +69,7 @@ function App() {
       } catch (err) {
         setError(err.message);
       }
+      setLoading(false)
     }
   }
 

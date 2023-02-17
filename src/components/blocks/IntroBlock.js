@@ -1,4 +1,4 @@
-import ConnectionButton from "./ConnectionButton";
+import ConnectionButton from "../buttons/ConnectionButton";
 
 function IntroBlock ({ account, connect }) {
   return (

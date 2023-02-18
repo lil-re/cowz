@@ -14,7 +14,7 @@ function SocialBlock () {
         We also aim to create link between members. Our Discord server is a place where everybody can share its own project to all farmerz.
       </p>
       <p className="card-text">
-        <a className="button button-primary" href="#">
+        <a className="button button-blue" href="#">
           Join the Discord
         </a>
       </p>

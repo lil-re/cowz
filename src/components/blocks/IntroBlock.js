@@ -22,7 +22,11 @@ function IntroBlock ({ account, connect }) {
       <p className="card-text">
         Finally, you can join our Discord community of makers and NFT enthusiasts, where everybody can help each other and share their projects.
       </p>
-      { account ? <span></span> : <ConnectionButton connect={connect} /> }
+      <p className="card-text">
+        <a className="button button-blue" href="#">
+          Join the Discord
+        </a>
+      </p>
     </article>
   );
 }

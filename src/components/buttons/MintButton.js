@@ -8,7 +8,7 @@ function MintButton ({ data, mint }) {
                 Each Cow NFT costs {data.cost / 10**18} eth (excluding gas fees)
             </p>
             <p className="card-text">
-                <button className="button button-primary" onClick={mint}>
+                <button className="button button-green" onClick={mint}>
                     Mint your Cow
                 </button>
             </p>

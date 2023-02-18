@@ -8,7 +8,7 @@ function UnstakeButton ({ data, unstake }) {
                 You have earned {data.earned} BabyCowz !
             </p>
             <p className="card-text">
-                <button className="button button-primary" onClick={unstake}>
+                <button className="button button-green" onClick={unstake}>
                     Unstake your Cow
                 </button>
             </p>

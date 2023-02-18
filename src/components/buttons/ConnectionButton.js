@@ -1,8 +1,8 @@
 function ConnectionButton ({ connect }) {
     return (
         <p className="card-text">
-            <button className="button button-primary" onClick={connect}>
-                Connect your waller
+            <button className="button button-orange" onClick={connect}>
+                Connect with Metamask
             </button>
         </p>
     );

@@ -8,7 +8,7 @@ function StakeButton ({ data, stake }) {
                 Stake it to get BabyCowz !
             </p>
             <p className="card-text">
-                <button className="button button-primary" onClick={stake}>
+                <button className="button button-green" onClick={stake}>
                     Stake your Cow
                 </button>
             </p>

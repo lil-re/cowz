@@ -6,8 +6,8 @@
     --grey: #CCC;
     --grey-darker: #AAA;
     --grey-lighter: #EEE;
-    --accent: #E3F2FD;
-    --accent-darker: #CFE9FC;
+    --accent: #d6f5d6;
+    --accent-darker: #c9f2c9;
     --green: #47D147;
     --green-darker: #33CC33;
     --green-lighter: #5CD65C;
@@ -42,6 +42,7 @@ input[type="button"] {
     outline: 0;
     cursor: pointer;
     box-sizing: border-box;
+    width: 100%;
 }
 
 a.button-secondary,
@@ -49,7 +50,7 @@ button.button-secondary,
 input[type="submit"].button-secondary,
 input[type="reset"].button-secondary,
 input[type="button"].button-secondary {
-    color: var(--blue);
+    color: var(--green-darker);
     background-color: var(--accent);
     border-color: var(--accent);
 }
@@ -479,6 +480,7 @@ div[class^="column"] {
 /* Table -------------------------------- */
 /* Based on Skeleton : http://getskeleton.com/ */
 table {
+    table-layout: fixed;
     width: 100%;
     background-color: #FFF;
     border-collapse: collapse;

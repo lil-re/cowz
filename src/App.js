@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { ethers } from "ethers";
+import axios from "axios"
 import Cowz from "./abis/Cowz.json"
 import BabyCowz from "./abis/BabyCowz.json"
 import MintBlock from "./components/blocks/MintBlock";
@@ -17,10 +18,10 @@ function App() {
   const [account, setAccount] = useState(null)
 
   useEffect(() => {
-    fetchData();
+    fetchContractData();
   }, [account]);
 
-  async function fetchData() {
+  async function fetchContractData() {
     if(typeof window.ethereum !== 'undefined' && account) {
       const provider = new ethers.providers.Web3Provider(window.ethereum)
       const cowzContract = new ethers.Contract(cowzAddress, Cowz.abi, provider)
@@ -35,6 +36,7 @@ function App() {
         const wallet = await cowzContract.walletOfOwner(account)
         const stakedCowId = await babyCowzContract.ownersCow(account)
         const earned = await babyCowzContract.earningInfo(stakedCowId)
+        const cow = await fetchCowData(cowzContract, wallet, stakedCowId)
         
         const values = {
           cost: String(cost),
@@ -44,6 +46,7 @@ function App() {
           cowId: Number(wallet[0]),
           stakedCowId: Number(stakedCowId),
           earned: Number(earned),
+          cow
         }
         setData(values);
       } catch (err) {
@@ -51,6 +54,28 @@ function App() {
       }
       setLoading(false)
     }
+  }
+
+  async function fetchCowData (cowzContract, wallet, stakedCowId) {
+    const tokenId = wallet[0] ? Number(wallet[0]) : Number(stakedCowId)
+    // const tokenUri = tokenId ? await cowzContract.tokenURI(tokenId) : null
+    const tokenUri = tokenId ? await cowzContract.tokenURI(2) : null
+    const cowUri = tokenUri ? `https://ipfs.io/ipfs/${tokenUri}` : null
+
+    if (cowUri) {
+      const response = await axios.get(cowUri)
+      
+      if (response.status === 200) {
+        const imageUri = response.data.image.split('ipfs://')[1]
+
+        return {
+          ...response.data,
+          image: `https://ipfs.io/ipfs/${imageUri}`,
+          metadata: cowUri
+        }
+      }
+    }
+    return null
   }
 
   async function mint() {
@@ -67,7 +92,7 @@ function App() {
         }
         const transaction = await contract.mint(account, 1, overrides);
         await transaction.wait();
-        await fetchData();
+        await fetchContractData();
       } catch (err) {
         setError(err.message);
       }
@@ -91,7 +116,7 @@ function App() {
 
         const stakingTransaction = await babyCowzContract.stake(data.cowId);
         await stakingTransaction.wait();
-        await fetchData();
+        await fetchContractData();
       } catch (err) {
         setError(err.message);
       }
@@ -109,7 +134,7 @@ function App() {
       try {
         const transaction = await contract.unstake(data.stakedCowId);
         await transaction.wait();
-        await fetchData();
+        await fetchContractData();
       } catch (err) {
         setError(err.message);
       }
@@ -127,7 +152,7 @@ function App() {
       try {
         const transaction = await contract.claim(data.stakedCowId);
         await transaction.wait();
-        await fetchData();
+        await fetchContractData();
       } catch (err) {
         setError(err.message);
       }
@@ -148,6 +173,7 @@ function App() {
         <div className="row justify-center">
           <div className="column-6">
             <div className="row justify-center">
+              {/* { data.cow ? <img src={data.cow.image}></img> : '' } */}
               <div className="column-12">
                 <MintBlock data={data} account={account} connect={connect} mint={mint} stake={stake} unstake={unstake} loading={loading} />
               </div>

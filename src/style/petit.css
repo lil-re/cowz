@@ -6,11 +6,11 @@
     --grey: #CCC;
     --grey-darker: #AAA;
     --grey-lighter: #EEE;
-    --accent: #d6f5d6;
-    --accent-darker: #c9f2c9;
-    --green: #47D147;
-    --green-darker: #33CC33;
-    --green-lighter: #5CD65C;
+    --accent: #E2F6E9;
+    --accent-darker: #D1F5E0;
+    --green: #2db967;
+    --green-darker: #28a45c;
+    --green-lighter: #32cd73;
     --blue: #2196F3;
     --blue-darker: #1E88E5;
     --blue-lighter: #42A5F5;
@@ -30,7 +30,7 @@ input[type="button"] {
     height: 38px;
     padding: 0 30px;
     text-align: center;
-    font-size: 12px;
+    font-size: 14px;
     font-weight: 600;
     line-height: 38px;
     letter-spacing: .05rem;

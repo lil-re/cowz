@@ -1,6 +1,6 @@
 import Buttons from "../buttons/Buttons";
 
-function MintBlock ({ data, account, connect, mint, stake, unstake, loading }) {
+function MintBlock ({ data, account, connect, mint, stake, unstake, claim, loading }) {
   return (
     <article className="card text-center">
       <img src="https://placedog.net/400/200/" alt="placeholder" />
@@ -16,7 +16,7 @@ function MintBlock ({ data, account, connect, mint, stake, unstake, loading }) {
       <p className="card-text">
         There are 2000 BabyCowz waiting for you. You can stake your cow on the farm and claim 1 BabyCow every 30 days. Each Cowz owner can mint up to 10 BabyCowz, for 0 ether !
       </p>
-      <Buttons data={data} account={account} connect={connect} mint={mint} stake={stake} unstake={unstake} loading={loading} />
+      <Buttons data={data} account={account} connect={connect} mint={mint} stake={stake} unstake={unstake} claim={claim} loading={loading} />
     </article>
   );
 }

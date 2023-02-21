@@ -175,13 +175,13 @@ function App() {
             <div className="row justify-center">
               {/* { data.cow ? <img src={data.cow.image}></img> : '' } */}
               <div className="column-12">
-                <MintBlock data={data} account={account} connect={connect} mint={mint} stake={stake} unstake={unstake} loading={loading} />
+                <MintBlock data={data} account={account} connect={connect} mint={mint} stake={stake} unstake={unstake} claim={claim} loading={loading} />
               </div>
               <div className="column-12">
                 <IntroBlock account={account} connect={connect} />
               </div>
               <div className="column-12">
-                <StakeBlock data={data} account={account} connect={connect} mint={mint} stake={stake} unstake={unstake} loading={loading} />
+                <StakeBlock data={data} account={account} connect={connect} mint={mint} stake={stake} unstake={unstake} claim={claim} loading={loading} />
               </div>
               <div className="column-12">
                 <SocialBlock />
